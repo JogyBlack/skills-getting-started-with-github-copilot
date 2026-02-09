@@ -18,16 +18,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        const participants = Array.isArray(details.participants) ? details.participants : [];
+        const spotsLeft = details.max_participants - participants.length;
 
         // Build participants list HTML with delete icon
         let participantsHTML = "";
-        if (details.participants && details.participants.length > 0) {
+        if (participants.length > 0) {
           participantsHTML = `
             <div class="participants-section">
               <h5>Participants</h5>
               <ul class="participants-list" style="list-style-type: none; padding-left: 0;">
-                ${details.participants.map(p => `
+                ${participants.map(p => `
                   <li style="display: flex; align-items: center; gap: 0.5em;">
                     <span>${p}</span>
                     <span class="delete-participant" data-activity="${name}" data-email="${p}" title="Remove participant" style="cursor:pointer;color:#c00;font-size:1.1em;">&#128465;</span>
