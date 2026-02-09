@@ -21,38 +21,75 @@ document.addEventListener("DOMContentLoaded", () => {
         const participants = Array.isArray(details.participants) ? details.participants : [];
         const spotsLeft = details.max_participants - participants.length;
 
-        // Build participants list HTML with delete icon
-        let participantsHTML = "";
-        if (participants.length > 0) {
-          participantsHTML = `
-            <div class="participants-section">
-              <h5>Participants</h5>
-              <ul class="participants-list" style="list-style-type: none; padding-left: 0;">
-                ${participants.map(p => `
-                  <li style="display: flex; align-items: center; gap: 0.5em;">
-                    <span>${p}</span>
-                    <span class="delete-participant" data-activity="${name}" data-email="${p}" title="Remove participant" style="cursor:pointer;color:#c00;font-size:1.1em;">&#128465;</span>
-                  </li>
-                `).join("")}
-              </ul>
-            </div>
-          `;
+        // Build activity content safely using DOM APIs
+        const titleEl = document.createElement("h4");
+        titleEl.textContent = name;
+        activityCard.appendChild(titleEl);
+
+        const descriptionEl = document.createElement("p");
+        descriptionEl.textContent = details.description;
+        activityCard.appendChild(descriptionEl);
+
+        const scheduleEl = document.createElement("p");
+        const scheduleStrong = document.createElement("strong");
+        scheduleStrong.textContent = "Schedule:";
+        scheduleEl.appendChild(scheduleStrong);
+        scheduleEl.appendChild(document.createTextNode(" " + details.schedule));
+        activityCard.appendChild(scheduleEl);
+
+        const availabilityEl = document.createElement("p");
+        const availabilityStrong = document.createElement("strong");
+        availabilityStrong.textContent = "Availability:";
+        availabilityEl.appendChild(availabilityStrong);
+        availabilityEl.appendChild(document.createTextNode(" " + spotsLeft + " spots left"));
+        activityCard.appendChild(availabilityEl);
+
+        const participantsSection = document.createElement("div");
+        participantsSection.className = "participants-section";
+
+        const participantsHeader = document.createElement("h5");
+        participantsHeader.textContent = "Participants";
+        participantsSection.appendChild(participantsHeader);
+
+        if (details.participants && details.participants.length > 0) {
+          const ul = document.createElement("ul");
+          ul.className = "participants-list";
+          ul.style.listStyleType = "none";
+          ul.style.paddingLeft = "0";
+
+          details.participants.forEach(p => {
+            const li = document.createElement("li");
+            li.style.display = "flex";
+            li.style.alignItems = "center";
+            li.style.gap = "0.5em";
+
+            const emailSpan = document.createElement("span");
+            emailSpan.textContent = p;
+            li.appendChild(emailSpan);
+
+            const deleteSpan = document.createElement("span");
+            deleteSpan.className = "delete-participant";
+            deleteSpan.title = "Remove participant";
+            deleteSpan.style.cursor = "pointer";
+            deleteSpan.style.color = "#c00";
+            deleteSpan.style.fontSize = "1.1em";
+            deleteSpan.textContent = "🗑";
+            deleteSpan.dataset.activity = name;
+            deleteSpan.dataset.email = p;
+            li.appendChild(deleteSpan);
+
+            ul.appendChild(li);
+          });
+
+          participantsSection.appendChild(ul);
         } else {
-          participantsHTML = `
-            <div class="participants-section">
-              <h5>Participants</h5>
-              <p class="no-participants">No participants yet.</p>
-            </div>
-          `;
+          const noParticipants = document.createElement("p");
+          noParticipants.className = "no-participants";
+          noParticipants.textContent = "No participants yet.";
+          participantsSection.appendChild(noParticipants);
         }
 
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          ${participantsHTML}
-        `;
+        activityCard.appendChild(participantsSection);
 
         activitiesList.appendChild(activityCard);
 
