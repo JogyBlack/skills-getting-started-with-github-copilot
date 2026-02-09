@@ -1,0 +1,39 @@
+/* ActivityCard.css */
+.participants-section {
+  margin-top: 1.5em;
+  padding: 1em;
+  background: #f7f9fa;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.participants-section h4 {
+  margin: 0 0 0.5em 0;
+  color: #2d5a88;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+
+.participants-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.participants-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.participants-list li {
+  margin-bottom: 0.25em;
+  color: #333;
+}
+
+.no-participants {
+  color: #888;
+  font-style: italic;
+  margin: 0;
+}
